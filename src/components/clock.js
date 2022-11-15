@@ -4,6 +4,31 @@ export const ClockUnit = ({lang='en-US', unit={}, st = '2-digit', offset =0, tol
 
       const [time,setTime] = useState(null);
 
+      let interval = 1;
+      console.log(unit)
+      switch(true){
+        case unit==='second' || unit.second !==undefined:
+            interval=100;
+            break;
+        case unit==='minute' || unit.minute !==undefined:
+            interval=1000;
+            break;
+        case unit === 'hour' ||  unit.hour !==undefined:
+        case unit === 'period' :
+            interval=60000;
+            break;
+        case unit==='day' || unit.day !==undefined:
+            interval=3600000;
+            break;
+        case unit==='month' || unit.month!==undefined ||unit==='year' || unit.year!==undefined:
+            interval=86400000;
+       break;
+        default:
+            interval=1;
+      }
+
+
+
       const tic = useCallback(()=>{
             let theLang= lang;
             const toc = new Date(new Date().getTime()+offset);
@@ -28,9 +53,9 @@ export const ClockUnit = ({lang='en-US', unit={}, st = '2-digit', offset =0, tol
         },[lang, offset, st, time, tol, unit]);
 
     useEffect(()=>{
-        const clean = setInterval(tic,1);
+        const clean = setInterval(tic,interval);
         return ()=>{ clearInterval(clean);}
     },[tic]) ;
 
-      return <>{time && pad ? time.padStart(pad,'0') : time}</>
+      return <>{time && pad ? time.padStart(pad,'0') : time}({interval})</>
 }
