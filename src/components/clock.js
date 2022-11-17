@@ -5,7 +5,6 @@ export const ClockUnit = ({lang='en-US', unit={}, st = '2-digit', offset =0, tol
       const [time,setTime] = useState(null);
 
       let interval = 1;
-      console.log(unit)
       switch(true){
         case unit==='second' || unit.second !==undefined:
             interval=100;
@@ -53,9 +52,9 @@ export const ClockUnit = ({lang='en-US', unit={}, st = '2-digit', offset =0, tol
         },[lang, offset, st, time, tol, unit]);
 
     useEffect(()=>{
-        const clean = setInterval(tic,interval);
+        const clean = setInterval(tic, (new Date().getTime()%interval) || interval);
         return ()=>{ clearInterval(clean);}
-    },[tic]) ;
+    },[tic, interval]) ;
 
       return <>{time && pad ? time.padStart(pad,'0') : time}({interval})</>
 }
